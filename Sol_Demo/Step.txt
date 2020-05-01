@@ -1,0 +1,85 @@
+Step 1:
+Create a Api Service, for this demo i had created CustomerApi
+
+Step 2:
+Create a ApiGateway Web Api
+
+Step 3:
+Add the following Nuget Package.
+Ocelot.
+
+Step 4:
+Create a Configuration folder, create configuration.json file inside the Configuration folder.
+
+Step 5:
+Add the following configuration setting on JSON file.
+{
+  "ReRoutes": [
+    //customer api config
+    {
+      "DownstreamPathTemplate": "/api/customer/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1072
+        }
+      ],
+      "UpstreamPathTemplate": "/api/customer/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+
+  }
+}
+
+
+Step 6:
+On StartUp.cs file, add the following service and middleware.
+
+    6.1 On ConfigureService method, add the following code
+    
+    services.AddOcelot();
+
+    6.2 On Configure method, add the following code before endpoint
+     app.UseOcelot().Wait();
+
+Step 7:
+Add the following code in Program.cs file
+
+public class Program
+    {
+        public static void Main(string[] args)
+        {
+            //CreateHostBuilder(args).Build().Run();
+
+            CreateWebHostBuilder(args).Build().Run();
+        }
+
+        //public static IHostBuilder CreateHostBuilder(string[] args) =>
+        //    Host.CreateDefaultBuilder(args)
+        //        .ConfigureWebHostDefaults(webBuilder =>
+        //        {
+        //            webBuilder.UseStartup<Startup>();
+        //        });
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((host, config) =>
+                {
+                    
+                    config.AddJsonFile(Path.Combine("Configurations", "configuration.json"));
+                })
+                .UseStartup<Startup>();
+    }
+
+Step 8:
+Now run api's through api gateway.
+
+    

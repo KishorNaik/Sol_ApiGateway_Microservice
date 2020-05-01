@@ -1,0 +1,25 @@
+{
+  "ReRoutes": [
+    //customer api config
+    {
+      "DownstreamPathTemplate": "/api/customer/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 1072
+        }
+      ],
+      "UpstreamPathTemplate": "/api/customer/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+
+  }
+}
