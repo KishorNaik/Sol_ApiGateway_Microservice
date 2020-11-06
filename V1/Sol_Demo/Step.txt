@@ -9,7 +9,7 @@ Add the following Nuget Package.
 Ocelot.
 
 Step 4:
-Create a Configuration folder, create configuration.json file inside the Configuration folder.
+Create a Configurations folder, create configuration.json file inside the Configurations folder.
 
 Step 5:
 Add the following configuration setting on JSON file.

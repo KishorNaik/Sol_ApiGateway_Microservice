@@ -31,8 +31,8 @@ namespace ApiGateWay
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((host, config) =>
                 {
-                    
-                    config.AddJsonFile(Path.Combine("Configurations", "configuration.json"));
+                    string path = Path.Combine("Configurations", "configuration.json");
+                    config.AddJsonFile(path);
                 })
                 .UseStartup<Startup>();
     }

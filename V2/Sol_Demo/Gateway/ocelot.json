@@ -1,0 +1,41 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/demo1/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3702
+        }
+      ],
+      "UpstreamPathTemplate": "/api/demo1/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/demo2/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3708
+        }
+      ],
+      "UpstreamPathTemplate": "/api/demo2/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:3760"
+  }
+}

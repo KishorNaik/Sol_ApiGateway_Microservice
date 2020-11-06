@@ -1,0 +1,138 @@
+Step 1:
+Create a Blank solution.
+
+Step 2:
+Create a WebApi solution and give project name as "WebApi1".
+
+Step 3:
+Create a WebApi solution and give project name as "WebApi2".
+
+Step 4:
+Create a Demo Controller class on both project and make a default Get Method endpoint. [Check Source Code]
+
+Step 5:
+Create a WebApi solution and give project name as "Gateway". 
+	5.1 Set as start up project.
+
+Step 6:
+Select "Gateway" project and donwload the following nuget package from nuget server.
+Ocelot
+
+Step 7:
+Create a ocelot.json file and configure following code in json file.
+
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/demo1/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3702
+        }
+      ],
+      "UpstreamPathTemplate": "/api/demo1/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/demo2/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3708
+        }
+      ],
+      "UpstreamPathTemplate": "/api/demo2/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:3760"
+  }
+}
+
+
+Step 8:
+Go to Program.cs file and modify the following code.
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Ocelot.Middleware;
+using Ocelot.DependencyInjection;
+
+namespace Gateway
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            new WebHostBuilder()
+              .UseKestrel()
+              .UseContentRoot(Directory.GetCurrentDirectory())
+              .ConfigureAppConfiguration((hostingContext, config) =>
+              {
+                  config
+                      .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+                      .AddJsonFile("appsettings.json", true, true)
+                      .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
+                      .AddJsonFile("ocelot.json")
+                      .AddEnvironmentVariables();
+              })
+              .ConfigureServices(s =>
+              {
+                  s.AddOcelot();
+              })
+              .ConfigureLogging((hostingContext, logging) =>
+              {
+                  //add your logging
+              })
+              .UseIIS()
+              .Configure(app =>
+              {
+                  app.UseOcelot().Wait();
+              })
+              .Build()
+              .Run();
+        }
+    }
+}
+
+
+Step 9:
+Build and Run WebApi 1 Project.
+http://localhost:3702/api/demo1/get
+
+Step 10:
+Build and Run WebApi 2 Project.
+http://localhost:3708/api/demo2/get
+
+Step 11:
+Build and Run the Gateway project
+http://localhost:3760/weatherforecast
+
+    11.1 Run the Web api 1 endpoint
+    http://localhost:3760/api/demo1/get
+
+    11.2 Run the Web api 2 endpoint
+    http://localhost:3760/api/demo2/get
+
+
